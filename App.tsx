@@ -2,6 +2,7 @@ import { StyleSheet, View } from "react-native";
 import { Provider } from "react-redux";
 import { Counter } from "./features/counter/Counter";
 import { Problem } from "./features/problems/components/Problem";
+import { Login } from "./features/users/components/Login";
 import { SignUp } from "./features/users/components/SignUp";
 import { store } from "./store";
 
@@ -11,7 +12,8 @@ export default function App() {
       <View style={styles.container}>
         {/* <Counter /> */}
         <Problem />
-        <SignUp />
+        {/* <SignUp />
+        <Login /> */}
       </View>
     </Provider>
   );

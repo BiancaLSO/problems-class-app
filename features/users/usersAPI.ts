@@ -16,4 +16,16 @@ export class UsersAPI {
       console.log("error", error);
     }
   }
+
+  static async login(user: UserEntity) {
+    try {
+      const result = await axios.post(
+        "http://" + this.baseURL + ":3000/auth/login",
+        user
+      );
+      return result.data;
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
 }

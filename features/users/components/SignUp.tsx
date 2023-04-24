@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button, TextInput, View, StyleSheet } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../../store";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../../store";
 import { UserEntity } from "../UserEntity";
 import { signUp } from "../userSlice";
 
