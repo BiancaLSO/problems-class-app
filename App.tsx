@@ -5,17 +5,31 @@ import { Problem } from "./features/problems/components/Problem";
 import { Login } from "./features/users/components/Login";
 import { SignUp } from "./features/users/components/SignUp";
 import { store } from "./store";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 export default function App() {
+  //   return (
+  //     <Provider store={store}>
+  //       <View style={styles.container}>
+  //         {/* <Counter /> */}
+  //         <Problem />
+  //         {/* <SignUp />
+  //         <Login /> */}
+  //       </View>
+  //     </Provider>
+  //   );
+  // }
+
   return (
-    <Provider store={store}>
-      <View style={styles.container}>
-        {/* <Counter /> */}
-        <Problem />
-        {/* <SignUp />
-        <Login /> */}
-      </View>
-    </Provider>
+    <QueryClientProvider client={queryClient}>
+      <Provider store={store}>
+        <View style={styles.container}>
+          <Problem></Problem>
+        </View>
+      </Provider>
+    </QueryClientProvider>
   );
 }
 

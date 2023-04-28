@@ -1,5 +1,12 @@
 import { useEffect, useState } from "react";
-import { TextInput, View, StyleSheet, Button, Text } from "react-native";
+import {
+  TextInput,
+  View,
+  StyleSheet,
+  Button,
+  Text,
+  FlatList,
+} from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../store";
 import { ProblemEntity } from "../ProblemEntity";
@@ -9,6 +16,9 @@ import {
   fetchAllProblems,
 } from "../problemSlice";
 import { Picture } from "../picture";
+import { useGetIssues, usePostIssues } from "../issues-hooks";
+import { useQueryClient } from "@tanstack/react-query";
+import { ProblemItem } from "./ProblemItem";
 
 export function Problem() {
   const problems: ProblemEntity[] = useSelector(
@@ -21,13 +31,29 @@ export function Problem() {
   const [camera, setCamera] = useState(false);
   const [photoToDisplay, setPhotoToDisplay] = useState("");
 
-  const handleSubmit = (event: any) => {
-    event.preventDefault();
-    console.log(`subject: ${subject}, description: ${description}`);
-    dispatch(
-      createProblem(new ProblemEntity(subject, description, photoToDisplay))
+  const { isLoading, error, data } = useGetIssues();
+  const queryClient = useQueryClient();
+  const { mutate: createProblem } = usePostIssues();
+
+  // const handleSubmit = (event: any) => {
+  //   event.preventDefault();
+  //   console.log(`subject: ${subject}, description: ${description}`);
+  //   dispatch(
+  //     createProblem(new ProblemEntity(subject, description, photoToDisplay))
+  //   );
+  //   clearForm();
+  // };
+
+  const handleAddProblem = () => {
+    const problemEntity: ProblemEntity = new ProblemEntity(
+      subject,
+      description,
+      photoToDisplay
     );
-    clearForm();
+    createProblem(problemEntity, {
+      onSuccess: () =>
+        queryClient.invalidateQueries({ queryKey: ["problems"] }),
+    });
   };
 
   const handleDelete = (id: number | undefined) => (event: any) => {
@@ -69,7 +95,10 @@ export function Problem() {
               onChangeText={setDescription}
             />
             <Button title="Open camera" onPress={() => setCamera(true)} />
-            <Button title="Create problem" onPress={handleSubmit} />
+            <Button
+              title="Create problem"
+              // onPress={handleSubmit}
+            />
           </>
         )}
       </View>
@@ -82,6 +111,14 @@ export function Problem() {
           <Button title="Delete problem" onPress={handleDelete(problem?.id)} />
         </View>
       ))} */}
+
+      <FlatList
+        data={data}
+        renderItem={({ item }) => (
+          <ProblemItem done={item.done} text={item.text} />
+        )}
+        keyExtractor={(item) => item.id.toString()}
+      />
     </View>
   );
 }
